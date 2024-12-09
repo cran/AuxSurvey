@@ -1,0 +1,15 @@
+4309eed73f73d2c0645bfeaa7221b478 *DESCRIPTION
+59f53688b0f4f8d46f829206bcbc99d1 *NAMESPACE
+345ada3df6b7d46b3b7142eda7cf8420 *R/AuxSurvey.R
+bb2296332b878be241e3195bca44d791 *README.md
+d42d3793fbd4dcc29c70b7b4f4da26cf *build/vignette.rds
+28af1fc050196ab3af09f5bfe49741fc *inst/doc/introduction.R
+65bddfa4a8ed66304d2f800bb3fa6864 *inst/doc/introduction.Rmd
+8fe20dbb4abc29c726f83479c226eaa6 *inst/doc/introduction.html
+73a64d9b2f98dd422d03477a33b65400 *man/auxsurvey.Rd
+c77af88fb6a3063e7c58a12b74beb65b *man/postStr_wt.Rd
+5a1ff7d341643dec9457c7abefa74b5e *man/rake_wt.Rd
+1e5d47013f52f29ff0ff75cea889c615 *man/simulate.Rd
+246eeaab32eb1f5167d38339fe6593fb *man/svyBayesmod.Rd
+3bc73bcf50f781896b69204b6ca65c16 *man/uwt.Rd
+65bddfa4a8ed66304d2f800bb3fa6864 *vignettes/introduction.Rmd

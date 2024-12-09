@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introduction for AuxSurvey: a package to improving survey inference using administrative records</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction for AuxSurvey: a package to
+improving survey inference using administrative records</h1>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>The <strong>AuxSurvey</strong> R package provides a set of
+statistical methods for improving survey inference by using
+<strong>discretized auxiliary variables</strong> from administrative
+records. The utility of such auxiliary data can often be diminished due
+to discretization for confidentiality reasons, but this package offers
+multiple estimators that handle such discretized auxiliary variables
+effectively.</p>
+<p>This vignette demonstrates the key functionalities of the
+<strong>AuxSurvey</strong> package, including:</p>
+<ul>
+<li>Weighted or unweighted sample mean</li>
+<li>Weighted or unweighted raking</li>
+<li>Weighted or unweighted poststratification</li>
+<li>MRP (Bayesian Multilevel Regression with Poststratification)</li>
+<li>GAMP (Bayesian Generalized Additive Model of Response
+Propensity)</li>
+<li>Bayesian Linear Regression</li>
+<li>BART (Bayesian Additive Regression Trees)</li>
+</ul>
+<p>These methods are designed for use with discretized auxiliary
+variables in survey data, and we will walk through data generation and
+estimation examples.</p>
+</div>
+<div id="generate-simulated-data" class="section level2">
+<h2>Generate Simulated Data</h2>
+<p>The <strong>AuxSurvey</strong> package includes a function
+<code>simulate()</code> that generates the datasets used in the paper.
+These datasets include a population of 3000 samples and a sample of
+about 600 cases, with two outcomes (<code>Y1</code> as a continuous
+variable, <code>Y2</code> as a binary outcome).</p>
+<p>The covariates in the dataset include: - <code>Z1</code>,
+<code>Z2</code>, <code>Z3</code>: Binary covariates - <code>X</code>:
+Continuous covariate - Discretized versions of <code>X</code>:
+<code>auX_3</code>, <code>auX_5</code>, <code>auX_10</code> - Propensity
+scores: <code>true_pi</code> (true), <code>logit_true_pi</code>,
+<code>estimated_pi</code> (estimated using BART)</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(AuxSurvey)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; Loading required package: mgcv</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt; Loading required package: nlme</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; This is mgcv 1.9-1. For overview type &#39;help(&quot;mgcv-package&quot;)&#39;.</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; Loading required package: rstanarm</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; Loading required package: Rcpp</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt; This is rstanarm version 2.32.1</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; - See https://mc-stan.org/rstanarm/articles/priors for changes to default priors!</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; - Default priors may change, so it&#39;s safest to specify priors, even if equivalent to the defaults.</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt; - For execution on a local, multicore CPU with excess RAM we recommend calling</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt;   options(mc.cores = parallel::detectCores())</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;AuxSurvey&#39;</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:stats&#39;:</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt;     simulate</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co"># Generate data</span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">simulate</span>(<span class="at">N =</span> <span class="dv">3000</span>, <span class="at">discretize =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">10</span>), <span class="at">setting =</span> <span class="dv">1</span>, <span class="at">seed =</span> <span class="dv">123</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="co">#&gt; *****Into main of pbart</span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co">#&gt; *****Data:</span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="co">#&gt; data:n,p,np: 3000, 4, 0</span></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a><span class="co">#&gt; y1,yn: 1, 0</span></span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a><span class="co">#&gt; x1,x[n*p]: 1.000000, -1.249241</span></span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a><span class="co">#&gt; *****Number of Trees: 50</span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="co">#&gt; *****Number of Cut Points: 1 ... 100</span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a><span class="co">#&gt; *****burn and ndpost: 100, 100</span></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="co">#&gt; *****Prior:mybeta,alpha,tau: 2.000000,0.950000,0.212132</span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a><span class="co">#&gt; *****binaryOffset: -0.830953</span></span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a><span class="co">#&gt; *****Dirichlet:sparse,theta,omega,a,b,rho,augment: 0,0,1,0.5,1,4,0</span></span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a><span class="co">#&gt; *****nkeeptrain,nkeeptest,nkeeptreedraws: 100,100,100</span></span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a><span class="co">#&gt; *****printevery: 100</span></span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a><span class="co">#&gt; *****skiptr,skipte,skiptreedraws: 1,1,1</span></span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a><span class="co">#&gt; MCMC</span></span>
+<span id="cb1-36"><a href="#cb1-36" tabindex="-1"></a><span class="co">#&gt; done 0 (out of 200)</span></span>
+<span id="cb1-37"><a href="#cb1-37" tabindex="-1"></a><span class="co">#&gt; done 100 (out of 200)</span></span>
+<span id="cb1-38"><a href="#cb1-38" tabindex="-1"></a><span class="co">#&gt; time: 1s</span></span>
+<span id="cb1-39"><a href="#cb1-39" tabindex="-1"></a><span class="co">#&gt; check counts</span></span>
+<span id="cb1-40"><a href="#cb1-40" tabindex="-1"></a><span class="co">#&gt; trcnt,tecnt: 100,0</span></span>
+<span id="cb1-41"><a href="#cb1-41" tabindex="-1"></a><span class="co">#&gt; *****In main of C++ for bart prediction</span></span>
+<span id="cb1-42"><a href="#cb1-42" tabindex="-1"></a><span class="co">#&gt; tc (threadcount): 1</span></span>
+<span id="cb1-43"><a href="#cb1-43" tabindex="-1"></a><span class="co">#&gt; number of bart draws: 100</span></span>
+<span id="cb1-44"><a href="#cb1-44" tabindex="-1"></a><span class="co">#&gt; number of trees in bart sum: 50</span></span>
+<span id="cb1-45"><a href="#cb1-45" tabindex="-1"></a><span class="co">#&gt; number of x columns: 4</span></span>
+<span id="cb1-46"><a href="#cb1-46" tabindex="-1"></a><span class="co">#&gt; from x,np,p: 4, 3000</span></span>
+<span id="cb1-47"><a href="#cb1-47" tabindex="-1"></a><span class="co">#&gt; ***using serial code</span></span>
+<span id="cb1-48"><a href="#cb1-48" tabindex="-1"></a><span class="co">#&gt; *****In main of C++ for bart prediction</span></span>
+<span id="cb1-49"><a href="#cb1-49" tabindex="-1"></a><span class="co">#&gt; tc (threadcount): 1</span></span>
+<span id="cb1-50"><a href="#cb1-50" tabindex="-1"></a><span class="co">#&gt; number of bart draws: 100</span></span>
+<span id="cb1-51"><a href="#cb1-51" tabindex="-1"></a><span class="co">#&gt; number of trees in bart sum: 50</span></span>
+<span id="cb1-52"><a href="#cb1-52" tabindex="-1"></a><span class="co">#&gt; number of x columns: 4</span></span>
+<span id="cb1-53"><a href="#cb1-53" tabindex="-1"></a><span class="co">#&gt; from x,np,p: 4, 609</span></span>
+<span id="cb1-54"><a href="#cb1-54" tabindex="-1"></a><span class="co">#&gt; ***using serial code</span></span>
+<span id="cb1-55"><a href="#cb1-55" tabindex="-1"></a><span class="co">#&gt; *****Into main of pbart</span></span>
+<span id="cb1-56"><a href="#cb1-56" tabindex="-1"></a><span class="co">#&gt; *****Data:</span></span>
+<span id="cb1-57"><a href="#cb1-57" tabindex="-1"></a><span class="co">#&gt; data:n,p,np: 3000, 5, 0</span></span>
+<span id="cb1-58"><a href="#cb1-58" tabindex="-1"></a><span class="co">#&gt; y1,yn: 1, 0</span></span>
+<span id="cb1-59"><a href="#cb1-59" tabindex="-1"></a><span class="co">#&gt; x1,x[n*p]: 1.000000, -1.152879</span></span>
+<span id="cb1-60"><a href="#cb1-60" tabindex="-1"></a><span class="co">#&gt; *****Number of Trees: 50</span></span>
+<span id="cb1-61"><a href="#cb1-61" tabindex="-1"></a><span class="co">#&gt; *****Number of Cut Points: 1 ... 100</span></span>
+<span id="cb1-62"><a href="#cb1-62" tabindex="-1"></a><span class="co">#&gt; *****burn and ndpost: 100, 100</span></span>
+<span id="cb1-63"><a href="#cb1-63" tabindex="-1"></a><span class="co">#&gt; *****Prior:mybeta,alpha,tau: 2.000000,0.950000,0.212132</span></span>
+<span id="cb1-64"><a href="#cb1-64" tabindex="-1"></a><span class="co">#&gt; *****binaryOffset: -0.830953</span></span>
+<span id="cb1-65"><a href="#cb1-65" tabindex="-1"></a><span class="co">#&gt; *****Dirichlet:sparse,theta,omega,a,b,rho,augment: 0,0,1,0.5,1,5,0</span></span>
+<span id="cb1-66"><a href="#cb1-66" tabindex="-1"></a><span class="co">#&gt; *****nkeeptrain,nkeeptest,nkeeptreedraws: 100,100,100</span></span>
+<span id="cb1-67"><a href="#cb1-67" tabindex="-1"></a><span class="co">#&gt; *****printevery: 100</span></span>
+<span id="cb1-68"><a href="#cb1-68" tabindex="-1"></a><span class="co">#&gt; *****skiptr,skipte,skiptreedraws: 1,1,1</span></span>
+<span id="cb1-69"><a href="#cb1-69" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-70"><a href="#cb1-70" tabindex="-1"></a><span class="co">#&gt; MCMC</span></span>
+<span id="cb1-71"><a href="#cb1-71" tabindex="-1"></a><span class="co">#&gt; done 0 (out of 200)</span></span>
+<span id="cb1-72"><a href="#cb1-72" tabindex="-1"></a><span class="co">#&gt; done 100 (out of 200)</span></span>
+<span id="cb1-73"><a href="#cb1-73" tabindex="-1"></a><span class="co">#&gt; time: 1s</span></span>
+<span id="cb1-74"><a href="#cb1-74" tabindex="-1"></a><span class="co">#&gt; check counts</span></span>
+<span id="cb1-75"><a href="#cb1-75" tabindex="-1"></a><span class="co">#&gt; trcnt,tecnt: 100,0</span></span>
+<span id="cb1-76"><a href="#cb1-76" tabindex="-1"></a><span class="co">#&gt; *****In main of C++ for bart prediction</span></span>
+<span id="cb1-77"><a href="#cb1-77" tabindex="-1"></a><span class="co">#&gt; tc (threadcount): 1</span></span>
+<span id="cb1-78"><a href="#cb1-78" tabindex="-1"></a><span class="co">#&gt; number of bart draws: 100</span></span>
+<span id="cb1-79"><a href="#cb1-79" tabindex="-1"></a><span class="co">#&gt; number of trees in bart sum: 50</span></span>
+<span id="cb1-80"><a href="#cb1-80" tabindex="-1"></a><span class="co">#&gt; number of x columns: 5</span></span>
+<span id="cb1-81"><a href="#cb1-81" tabindex="-1"></a><span class="co">#&gt; from x,np,p: 5, 3000</span></span>
+<span id="cb1-82"><a href="#cb1-82" tabindex="-1"></a><span class="co">#&gt; ***using serial code</span></span>
+<span id="cb1-83"><a href="#cb1-83" tabindex="-1"></a><span class="co">#&gt; *****In main of C++ for bart prediction</span></span>
+<span id="cb1-84"><a href="#cb1-84" tabindex="-1"></a><span class="co">#&gt; tc (threadcount): 1</span></span>
+<span id="cb1-85"><a href="#cb1-85" tabindex="-1"></a><span class="co">#&gt; number of bart draws: 100</span></span>
+<span id="cb1-86"><a href="#cb1-86" tabindex="-1"></a><span class="co">#&gt; number of trees in bart sum: 50</span></span>
+<span id="cb1-87"><a href="#cb1-87" tabindex="-1"></a><span class="co">#&gt; number of x columns: 5</span></span>
+<span id="cb1-88"><a href="#cb1-88" tabindex="-1"></a><span class="co">#&gt; from x,np,p: 5, 609</span></span>
+<span id="cb1-89"><a href="#cb1-89" tabindex="-1"></a><span class="co">#&gt; ***using serial code</span></span>
+<span id="cb1-90"><a href="#cb1-90" tabindex="-1"></a>population <span class="ot">=</span> data<span class="sc">$</span>population  <span class="co"># Full population data (3000 cases)</span></span>
+<span id="cb1-91"><a href="#cb1-91" tabindex="-1"></a>samples <span class="ot">=</span> data<span class="sc">$</span>samples  <span class="co"># Sample data (600 cases)</span></span>
+<span id="cb1-92"><a href="#cb1-92" tabindex="-1"></a>ipw <span class="ot">=</span> <span class="dv">1</span> <span class="sc">/</span> samples<span class="sc">$</span>true_pi  <span class="co"># True inverse probability weighting</span></span>
+<span id="cb1-93"><a href="#cb1-93" tabindex="-1"></a>est_ipw <span class="ot">=</span> <span class="dv">1</span> <span class="sc">/</span> samples<span class="sc">$</span>estimated_pi  <span class="co"># Estimated inverse probability weighting</span></span>
+<span id="cb1-94"><a href="#cb1-94" tabindex="-1"></a>true_mean <span class="ot">=</span> <span class="fu">mean</span>(population<span class="sc">$</span>Y1)  <span class="co"># True value of the estimator</span></span></code></pre></div>
+</div>
+<div id="estimation-methods" class="section level2">
+<h2>Estimation Methods</h2>
+<p>After generating the data, we can use the <code>auxsurvey()</code>
+function to apply various estimators. The
+<strong><code>auxsurvey()</code></strong> function supports multiple
+estimation methods, including unweighted or weighted sample mean,
+raking, poststratification, MRP, GAMP, linear regression, and BART.</p>
+<div id="example-1-sample-mean" class="section level3">
+<h3>Example 1: Sample Mean</h3>
+<p>To estimate the <strong>sample mean</strong> for <code>Y1</code>, we
+can use the <code>auxsurvey()</code> function. For the unweighted sample
+mean:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Unweighted sample mean</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>sample_mean <span class="ot">=</span> <span class="fu">auxsurvey</span>(<span class="st">&quot;~Y1&quot;</span>, <span class="at">auxiliary =</span> <span class="cn">NULL</span>, <span class="at">weights =</span> <span class="cn">NULL</span>, <span class="at">samples =</span> samples, <span class="at">population =</span> <span class="cn">NULL</span>, <span class="at">method =</span> <span class="st">&quot;sample_mean&quot;</span>, <span class="at">levels =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<p>For the inverse probability weighted (IPW) sample mean:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># IPW sample mean</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>IPW_sample_mean <span class="ot">=</span> <span class="fu">auxsurvey</span>(<span class="st">&quot;~Y1&quot;</span>, <span class="at">auxiliary =</span> <span class="cn">NULL</span>, <span class="at">weights =</span> ipw, <span class="at">samples =</span> samples, <span class="at">population =</span> population, <span class="at">method =</span> <span class="st">&quot;sample_mean&quot;</span>, <span class="at">levels =</span> <span class="fl">0.95</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; population parameter is specified, so the finite population correction will be calculated for sample mean.</span></span></code></pre></div>
+</div>
+<div id="example-2-raking" class="section level3">
+<h3>Example 2: Raking</h3>
+<p>The <strong>raking</strong> method adjusts the sample to match known
+marginal distributions of the auxiliary variables. You can apply raking
+for <code>auX_5</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Unweighted Raking for auX_5 with interaction with Z1</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>rake_5_Z1 <span class="ot">=</span> <span class="fu">auxsurvey</span>(<span class="st">&quot;~Y1&quot;</span>, <span class="at">auxiliary =</span> <span class="st">&quot;Z2 + Z3 + auX_5 * Z1&quot;</span>, <span class="at">weights =</span> <span class="cn">NULL</span>, <span class="at">samples =</span> samples, <span class="at">population =</span> population, <span class="at">method =</span> <span class="st">&quot;rake&quot;</span>, <span class="at">levels =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<p>For IPW raking:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># IPW Raking for auX_10</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>rake_10 <span class="ot">=</span> <span class="fu">auxsurvey</span>(<span class="st">&quot;~Y1&quot;</span>, <span class="at">auxiliary =</span> <span class="st">&quot;Z1 + Z2 + Z3 + auX_10&quot;</span>, <span class="at">weights =</span> ipw, <span class="at">samples =</span> samples, <span class="at">population =</span> population, <span class="at">method =</span> <span class="st">&quot;rake&quot;</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="fl">0.95</span>, <span class="fl">0.8</span>))</span></code></pre></div>
+</div>
+<div id="example-3-mrp-multilevel-regression-with-poststratification" class="section level3">
+<h3>Example 3: MRP (Multilevel Regression with Poststratification)</h3>
+<p>The <strong>MRP</strong> method models the outcome using both fixed
+and random effects. Here is an example of running MRP with
+<code>auX_3</code> as a random effect:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># MRP with auX_3</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>MRP_1 <span class="ot">=</span> <span class="fu">auxsurvey</span>(<span class="st">&quot;Y1 ~ Z1 + Z2&quot;</span>, <span class="at">auxiliary =</span> <span class="st">&quot;Z3 + auX_3&quot;</span>, <span class="at">samples =</span> samples, <span class="at">population =</span> population, <span class="at">method =</span> <span class="st">&quot;MRP&quot;</span>, <span class="at">levels =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+</div>
+<div id="example-4-gamp-generalized-additive-model-of-response-propensity" class="section level3">
+<h3>Example 4: GAMP (Generalized Additive Model of Response
+Propensity)</h3>
+<p>The <strong>GAMP</strong> method can include smooth functions of the
+auxiliary variables. For example, here’s how to use smooth functions of
+<code>logit_estimated_pi</code> and <code>auX_10</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># GAMP with smooth functions</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>GAMP_1 <span class="ot">=</span> <span class="fu">auxsurvey</span>(<span class="st">&quot;Y1 ~ 1 + Z1 + Z2 + Z3&quot;</span>, <span class="at">auxiliary =</span> <span class="st">&quot;s(logit_estimated_pi) + s(auX_10)&quot;</span>, <span class="at">samples =</span> samples, <span class="at">population =</span> population, <span class="at">method =</span> <span class="st">&quot;GAMP&quot;</span>, <span class="at">levels =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+</div>
+<div id="example-5-bayesian-linear-regression" class="section level3">
+<h3>Example 5: Bayesian Linear Regression</h3>
+<p>The <strong>Bayesian Linear Regression</strong> method treats
+categorical variables as dummy variables. Here’s an example for
+<code>Y1</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Linear regression with Bayesian estimation</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>LR_1 <span class="ot">=</span> <span class="fu">auxsurvey</span>(<span class="st">&quot;Y1 ~ 1 + Z1 + Z2 + Z3&quot;</span>, <span class="at">auxiliary =</span> <span class="st">&quot;auX_3&quot;</span>, <span class="at">samples =</span> samples, <span class="at">population =</span> population, <span class="at">method =</span> <span class="st">&quot;linear&quot;</span>, <span class="at">levels =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+</div>
+<div id="example-6-bart-bayesian-additive-regression-trees" class="section level3">
+<h3>Example 6: BART (Bayesian Additive Regression Trees)</h3>
+<p>Finally, the <strong>BART</strong> method can be applied to estimate
+the relationship between the outcome and the covariates. Here’s an
+example for estimating <code>Y1</code> using BART:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># BART for estimation</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>BART_1 <span class="ot">=</span> <span class="fu">auxsurvey</span>(<span class="st">&quot;Y1 ~ Z1 + Z2 + Z3 + auX_3 + logit_true_pi&quot;</span>, <span class="at">auxiliary =</span> <span class="cn">NULL</span>, <span class="at">samples =</span> samples, <span class="at">population =</span> population, <span class="at">method =</span> <span class="st">&quot;BART&quot;</span>, <span class="at">levels =</span> <span class="fl">0.95</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; *****Into main of wbart</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; *****Data:</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; data:n,p,np: 609, 6, 0</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; y1,yn: 2.646420, -0.963718</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; x1,x[n*p]: 1.000000, -1.119597</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; *****Number of Trees: 200</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; *****Number of Cut Points: 1 ... 100</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; *****burn and ndpost: 1000, 1000</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; *****Prior:beta,alpha,tau,nu,lambda: 2.000000,0.950000,0.737716,3.000000,5.078729</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; *****sigma: 5.106138</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; *****w (weights): 1.000000 ... 1.000000</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; *****Dirichlet:sparse,theta,omega,a,b,rho,augment: 0,0,1,0.5,1,6,0</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt; *****nkeeptrain,nkeeptest,nkeeptestme,nkeeptreedraws: 1000,1000,1000,1000</span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt; *****printevery: 100</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; *****skiptr,skipte,skipteme,skiptreedraws: 1,1,1,1</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co">#&gt; MCMC</span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co">#&gt; done 0 (out of 2000)</span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co">#&gt; done 100 (out of 2000)</span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="co">#&gt; done 200 (out of 2000)</span></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="co">#&gt; done 300 (out of 2000)</span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="co">#&gt; done 400 (out of 2000)</span></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="co">#&gt; done 500 (out of 2000)</span></span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a><span class="co">#&gt; done 600 (out of 2000)</span></span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a><span class="co">#&gt; done 700 (out of 2000)</span></span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a><span class="co">#&gt; done 800 (out of 2000)</span></span>
+<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a><span class="co">#&gt; done 900 (out of 2000)</span></span>
+<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a><span class="co">#&gt; done 1000 (out of 2000)</span></span>
+<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a><span class="co">#&gt; done 1100 (out of 2000)</span></span>
+<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a><span class="co">#&gt; done 1200 (out of 2000)</span></span>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a><span class="co">#&gt; done 1300 (out of 2000)</span></span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a><span class="co">#&gt; done 1400 (out of 2000)</span></span>
+<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a><span class="co">#&gt; done 1500 (out of 2000)</span></span>
+<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a><span class="co">#&gt; done 1600 (out of 2000)</span></span>
+<span id="cb9-37"><a href="#cb9-37" tabindex="-1"></a><span class="co">#&gt; done 1700 (out of 2000)</span></span>
+<span id="cb9-38"><a href="#cb9-38" tabindex="-1"></a><span class="co">#&gt; done 1800 (out of 2000)</span></span>
+<span id="cb9-39"><a href="#cb9-39" tabindex="-1"></a><span class="co">#&gt; done 1900 (out of 2000)</span></span>
+<span id="cb9-40"><a href="#cb9-40" tabindex="-1"></a><span class="co">#&gt; time: 10s</span></span>
+<span id="cb9-41"><a href="#cb9-41" tabindex="-1"></a><span class="co">#&gt; check counts</span></span>
+<span id="cb9-42"><a href="#cb9-42" tabindex="-1"></a><span class="co">#&gt; trcnt,tecnt,temecnt,treedrawscnt: 1000,0,0,1000</span></span>
+<span id="cb9-43"><a href="#cb9-43" tabindex="-1"></a><span class="co">#&gt; *****In main of C++ for bart prediction</span></span>
+<span id="cb9-44"><a href="#cb9-44" tabindex="-1"></a><span class="co">#&gt; tc (threadcount): 1</span></span>
+<span id="cb9-45"><a href="#cb9-45" tabindex="-1"></a><span class="co">#&gt; number of bart draws: 1000</span></span>
+<span id="cb9-46"><a href="#cb9-46" tabindex="-1"></a><span class="co">#&gt; number of trees in bart sum: 200</span></span>
+<span id="cb9-47"><a href="#cb9-47" tabindex="-1"></a><span class="co">#&gt; number of x columns: 6</span></span>
+<span id="cb9-48"><a href="#cb9-48" tabindex="-1"></a><span class="co">#&gt; from x,np,p: 6, 3000</span></span>
+<span id="cb9-49"><a href="#cb9-49" tabindex="-1"></a><span class="co">#&gt; ***using serial code</span></span>
+<span id="cb9-50"><a href="#cb9-50" tabindex="-1"></a><span class="co">#&gt; *****In main of C++ for bart prediction</span></span>
+<span id="cb9-51"><a href="#cb9-51" tabindex="-1"></a><span class="co">#&gt; tc (threadcount): 1</span></span>
+<span id="cb9-52"><a href="#cb9-52" tabindex="-1"></a><span class="co">#&gt; number of bart draws: 1000</span></span>
+<span id="cb9-53"><a href="#cb9-53" tabindex="-1"></a><span class="co">#&gt; number of trees in bart sum: 200</span></span>
+<span id="cb9-54"><a href="#cb9-54" tabindex="-1"></a><span class="co">#&gt; number of x columns: 6</span></span>
+<span id="cb9-55"><a href="#cb9-55" tabindex="-1"></a><span class="co">#&gt; from x,np,p: 6, 609</span></span>
+<span id="cb9-56"><a href="#cb9-56" tabindex="-1"></a><span class="co">#&gt; ***using serial code</span></span></code></pre></div>
+</div>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>The <strong>AuxSurvey</strong> package provides a powerful set of
+tools for survey analysis when working with discretized auxiliary data.
+By leveraging various Bayesian models and traditional survey methods
+like raking and poststratification, users can enhance their inference
+without violating confidentiality.</p>
+<p>For further details on the package’s functionality, please refer to
+the documentation, which provides more examples and explanation of the
+various estimators.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
